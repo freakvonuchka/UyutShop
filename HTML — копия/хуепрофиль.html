@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный профиль</title>
+    <style>
+        /* Стили для надписи "Изменить фото" */
+        #profile-photo-label {
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        #profile-photo-label::after {
+            content: 'Изменить фото';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #profile-photo-label:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Ваш контент страницы -->
+    <h1>Личный профиль</h1>
+    
+    <!-- Метка и поле выбора файла -->
+    <label id="profile-photo-label" for="profile-photo-input">
+        <!-- Здесь будет отображаться фотография профиля -->
+        <img id="profile-photo" src="default-profile-photo.jpg" alt="Фотография профиля" style="width: 150px; height: 150px; border-radius: 50%;">
+    </label>
+    <input type="file" id="profile-photo-input" accept="image/*" style="display: none;">
+
+    <!-- JavaScript для обработки загрузки фотографии -->
+    <script>
+        // При загрузке страницы проверяем, есть ли сохраненное изображение профиля в localStorage
+        window.onload = function() {
+            const profilePhotoUrl = localStorage.getItem('userphoto');
+            if (profilePhotoUrl) {
+                document.getElementById('profile-photo').src = profilePhotoUrl;
+            }
+        };
+
+        // При изменении файла загружаем фотографию и отображаем ее
+        document.getElementById('profile-photo-input').addEventListener('change', function(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    const imageUrl = event.target.result;
+                    localStorage.setItem('userphoto', imageUrl);
+                    document.getElementById('profile-photo').src = imageUrl;
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                alert('Выберите файл для загрузки');
+            }
+        });
+    </script>
+</body>
+</html>
